@@ -4,12 +4,7 @@ import java.io.File
 import java.net.URL
 
 import epic.models.{NerSelector, ParserSelector}
-import epic.parser.ParserAnnotator
 import epic.preprocess
-import epic.preprocess.{TreebankTokenizer, MLSentenceSegmenter}
-import epic.sequences.{SemiCRF, Segmenter}
-import epic.slab.{EntityMention, Token, Sentence}
-import epic.trees.{AnnotatedLabel, Tree}
 import epic.util.SafeLogging
 
 /**
@@ -30,6 +25,13 @@ object EpicSeqDemo extends SafeLogging {
 
       val preprocessed = preprocess.preprocess(preprocess.TextExtractor.extractText(url))
 
+      for(sent <- preprocessed) {
+        println(sent)
+        println(sent.length)
+        println("===")
+        println(parser(sent) render sent)
+        println("======")
+      }
       logger.info(s"==== parses for $arg ====")
       val parsed = preprocessed.par.map(parser).seq
       for((tree, sentence) <- parsed zip preprocessed) {
